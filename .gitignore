@@ -1,0 +1,31 @@
+# IntelliJ
+.idea/
+
+# VS Code
+.vscode/
+
+# Maven
+target/
+
+# Logs
+*.log
+
+# Environment
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Build
+dist/
+
+# Mac
+.AppleDouble
+
+# Windows
+Desktop.ini
+/.metadata/
