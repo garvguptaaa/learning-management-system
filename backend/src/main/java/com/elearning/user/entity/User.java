@@ -7,6 +7,17 @@ import com.elearning.common.audit.BaseEntity;
 import com.elearning.role.entity.Role;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "users")
@@ -51,8 +62,7 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public User() {
-    }
+
 
     // Generate Constructors, Getters and Setters using STS
 }
