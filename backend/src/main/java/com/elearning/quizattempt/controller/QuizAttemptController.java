@@ -1,5 +1,6 @@
 package com.elearning.quizattempt.controller;
 
+import com.elearning.quizattempt.dto.response.QuizResultResponse;
 import com.elearning.quizattempt.dto.response.StartQuizResponse;
 import com.elearning.quizattempt.dto.response.SubmitQuizResponse;
 import com.elearning.quizattempt.service.QuizAttemptService;
@@ -38,6 +39,18 @@ public class QuizAttemptController {
 
         return ResponseEntity.ok(
                 quizAttemptService.submitQuiz(
+                        attemptId,
+                        authentication.getName()));
+    }
+    
+    @GetMapping("/{attemptId}/result")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<QuizResultResponse> getResult(
+            @PathVariable Long attemptId,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                quizAttemptService.getResult(
                         attemptId,
                         authentication.getName()));
     }

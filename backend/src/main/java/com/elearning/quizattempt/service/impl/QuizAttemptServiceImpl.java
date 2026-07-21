@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import com.elearning.quizattempt.dto.response.QuizResultResponse;
 import com.elearning.quizattempt.dto.response.StartQuizResponse;
 import com.elearning.quizattempt.dto.response.SubmitQuizResponse;
 import com.elearning.quizattempt.entity.QuizAttempt;
@@ -193,5 +194,13 @@ public class QuizAttemptServiceImpl
                 .passed(passed)
                 .status(attempt.getStatus().name())
                 .build();
+    }
+    
+    @Override
+    public QuizResultResponse getResult(
+            Long attemptId,
+            String studentEmail) {
+
+        return null;
     }
 }

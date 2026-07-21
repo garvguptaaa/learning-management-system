@@ -24,4 +24,6 @@ public interface EnrollmentRepository
     List<Enrollment> findByCourse(Course course);
     
     
+    
+    
 }
