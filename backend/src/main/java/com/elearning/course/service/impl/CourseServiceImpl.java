@@ -14,6 +14,7 @@ import com.elearning.common.enums.CourseStatus;
 import com.elearning.common.exception.ResourceNotFoundException;
 import com.elearning.course.entity.Course;
 import com.elearning.user.entity.User;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +49,27 @@ public class CourseServiceImpl implements CourseService {
     	Course savedCourse = courseRepository.save(course);
 
     	return courseMapper.toResponse(savedCourse);
+    }
+    
+    @Override
+    public List<CourseResponse> getAllPublishedCourses() {
+
+        return courseRepository.findByPublishedTrue()
+                .stream()
+                .map(courseMapper::toResponse)
+                .toList();
+
+    }
+    
+    @Override
+    public CourseResponse getCourseById(Long id) {
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course not found"));
+
+        return courseMapper.toResponse(course);
+
     }
 
 }

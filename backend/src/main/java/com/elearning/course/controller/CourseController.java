@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.elearning.course.dto.request.CreateCourseRequest;
 import com.elearning.course.dto.response.CourseResponse;
 import com.elearning.course.service.CourseService;
+import java.util.List;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,22 @@ public class CourseController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<CourseResponse>> getAllCourses() {
+
+        return ResponseEntity.ok(
+                courseService.getAllPublishedCourses());
+
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseResponse> getCourseById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                courseService.getCourseById(id));
+
     }
 }
