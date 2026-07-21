@@ -10,5 +10,7 @@ import com.elearning.quiz.entity.Quiz;
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     Optional<Quiz> findByLesson(Lesson lesson);
+    
+    boolean existsByLesson(Lesson lesson);
 
 }
