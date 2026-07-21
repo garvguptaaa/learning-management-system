@@ -1,6 +1,7 @@
 package com.elearning.option.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,6 +13,9 @@ public interface OptionRepository
 
     List<Option> findByQuestionOrderByOptionOrderAsc(Question question);
 
+    Optional<Option> findByIdAndQuestion(
+            Long id,
+            Question question);
     long countByQuestionAndCorrectTrue(Question question);
     
     boolean existsByQuestionAndOptionOrder(Question question,

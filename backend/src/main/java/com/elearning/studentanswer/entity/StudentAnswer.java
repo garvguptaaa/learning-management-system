@@ -37,8 +37,10 @@ public class StudentAnswer extends BaseEntity {
     private String descriptiveAnswer;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean correct = false;
 
     @Column(nullable = false)
-    private Integer obtainedMarks = 0;
+    @Builder.Default
+    private Double obtainedMarks = 0.0;
 }
