@@ -11,6 +11,11 @@ import com.elearning.course.dto.response.CourseResponse;
 import com.elearning.course.service.CourseService;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.elearning.course.dto.request.UpdateCourseRequest;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -50,5 +55,20 @@ public class CourseController {
         return ResponseEntity.ok(
                 courseService.getCourseById(id));
 
+    }
+    
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
+    public ResponseEntity<CourseResponse> updateCourse(
+            @PathVariable Long id,
+            Authentication authentication,
+            @Valid @RequestBody UpdateCourseRequest request) {
+
+        CourseResponse response = courseService.updateCourse(
+                id,
+                authentication.getName(),
+                request);
+
+        return ResponseEntity.ok(response);
     }
 }

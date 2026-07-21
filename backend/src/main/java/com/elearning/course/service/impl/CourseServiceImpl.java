@@ -12,6 +12,7 @@ import com.elearning.course.service.CourseService;
 import com.elearning.user.repository.UserRepository;
 import com.elearning.category.entity.Category;
 import com.elearning.common.enums.CourseStatus;
+import com.elearning.common.enums.RoleType;
 import com.elearning.common.exception.ResourceNotFoundException;
 import com.elearning.course.entity.Course;
 import com.elearning.user.entity.User;
@@ -73,10 +74,46 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
-	@Override
-	public CourseResponse updateCourse(Long courseId, String email, UpdateCourseRequest request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public CourseResponse updateCourse(Long courseId,
+                                       String email,
+                                       UpdateCourseRequest request) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        Course course;
+
+        boolean isAdmin = user.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName() == RoleType.ADMIN);
+
+        if (isAdmin) {
+            course = courseRepository.findById(courseId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Course not found"));
+        } else {
+            course = courseRepository.findByIdAndInstructorEmail(courseId, email)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException(
+                                    "Course not found or you are not the owner"));
+        }
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category not found"));
+
+        course.setTitle(request.getTitle());
+        course.setDescription(request.getDescription());
+        course.setPrice(request.getPrice());
+        course.setLevel(request.getLevel());
+        course.setThumbnailUrl(request.getThumbnailUrl());
+        course.setCategory(category);
+
+        Course updatedCourse = courseRepository.save(course);
+
+        return courseMapper.toResponse(updatedCourse);
+    }
 
 }
