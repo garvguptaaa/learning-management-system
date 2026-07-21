@@ -34,8 +34,17 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateProfile(String email,
                                       UpdateProfileRequest request) {
 
-        return null;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
 
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhone(request.getPhone());
+
+        User updatedUser = userRepository.save(user);
+
+        return userMapper.toResponse(updatedUser);
     }
 
 }
