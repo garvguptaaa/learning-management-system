@@ -1,6 +1,7 @@
 package com.elearning.quizattempt.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,5 +16,9 @@ public interface QuizAttemptRepository
 
     long countByQuizAndStudent(Quiz quiz,
                                User student);
+    
+    Optional<QuizAttempt> findByIdAndStudent(
+            Long id,
+            User student);
 
 }
