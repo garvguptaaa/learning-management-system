@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.elearning.category.repository.CategoryRepository;
 import com.elearning.course.dto.request.CreateCourseRequest;
+import com.elearning.course.dto.request.UpdateCourseRequest;
 import com.elearning.course.dto.response.CourseResponse;
 import com.elearning.course.mapper.CourseMapper;
 import com.elearning.course.repository.CourseRepository;
@@ -71,5 +72,11 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toResponse(course);
 
     }
+
+	@Override
+	public CourseResponse updateCourse(Long courseId, String email, UpdateCourseRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

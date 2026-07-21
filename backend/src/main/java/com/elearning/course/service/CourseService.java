@@ -1,6 +1,7 @@
 package com.elearning.course.service;
 
 import com.elearning.course.dto.request.CreateCourseRequest;
+import com.elearning.course.dto.request.UpdateCourseRequest;
 import com.elearning.course.dto.response.CourseResponse;
 
 import java.util.List;
@@ -13,4 +14,8 @@ public interface CourseService {
     List<CourseResponse> getAllPublishedCourses();
 
     CourseResponse getCourseById(Long id);
+    
+    CourseResponse updateCourse(Long courseId,
+            String email,
+            UpdateCourseRequest request);
 }
