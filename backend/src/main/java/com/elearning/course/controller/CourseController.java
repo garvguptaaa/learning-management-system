@@ -6,6 +6,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import com.elearning.common.response.ApiResponse;
+import com.elearning.common.util.ResponseUtil;
 import com.elearning.course.dto.request.CreateCourseRequest;
 import com.elearning.course.dto.response.CourseResponse;
 import com.elearning.course.service.CourseService;
@@ -42,11 +44,12 @@ public class CourseController {
     }
     
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> getAllCourses() {
+    public ResponseEntity<ApiResponse<List<CourseResponse>>> getAllCourses() {
 
         return ResponseEntity.ok(
-                courseService.getAllPublishedCourses());
-
+                ResponseUtil.success(
+                        "Courses fetched successfully",
+                        courseService.getAllPublishedCourses()));
     }
     
     @GetMapping("/{id}")
