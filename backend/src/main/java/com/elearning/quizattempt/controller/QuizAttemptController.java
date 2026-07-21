@@ -1,6 +1,7 @@
 package com.elearning.quizattempt.controller;
 
 import com.elearning.quizattempt.dto.response.StartQuizResponse;
+import com.elearning.quizattempt.dto.response.SubmitQuizResponse;
 import com.elearning.quizattempt.service.QuizAttemptService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,18 @@ public class QuizAttemptController {
         return ResponseEntity.ok(
                 quizAttemptService.startQuiz(
                         quizId,
+                        authentication.getName()));
+    }
+    
+    @PostMapping("/{attemptId}/submit")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<SubmitQuizResponse> submitQuiz(
+            @PathVariable Long attemptId,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                quizAttemptService.submitQuiz(
+                        attemptId,
                         authentication.getName()));
     }
 }

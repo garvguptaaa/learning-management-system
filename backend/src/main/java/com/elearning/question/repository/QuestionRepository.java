@@ -18,4 +18,7 @@ public interface QuestionRepository
             String email);
     
     boolean existsByQuizAndQuestionOrder(Quiz quiz, Integer questionOrder);
+    
+    List<Question> findByQuiz(
+            Quiz quiz);
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
 import com.elearning.quizattempt.dto.response.StartQuizResponse;
+import com.elearning.quizattempt.dto.response.SubmitQuizResponse;
 import com.elearning.quizattempt.entity.QuizAttempt;
 import com.elearning.quizattempt.repository.QuizAttemptRepository;
 import com.elearning.quizattempt.service.QuizAttemptService;
@@ -91,5 +92,13 @@ public class QuizAttemptServiceImpl
                 .durationInMinutes(quiz.getDurationInMinutes())
                 .status(saved.getStatus().name())
                 .build();
+    }
+    
+    
+    @Override
+    public SubmitQuizResponse submitQuiz(Long attemptId,
+                                         String studentEmail) {
+
+        return null;
     }
 }

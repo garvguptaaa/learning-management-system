@@ -13,6 +13,7 @@ import com.elearning.quiz.entity.Quiz;
 import com.elearning.quiz.mapper.QuizMapper;
 import com.elearning.quiz.repository.QuizRepository;
 import com.elearning.quiz.service.QuizService;
+import com.elearning.quizattempt.dto.response.SubmitQuizResponse;
 import com.elearning.user.entity.User;
 import com.elearning.user.repository.UserRepository;
 
@@ -73,5 +74,13 @@ public class QuizServiceImpl implements QuizService {
         Quiz savedQuiz = quizRepository.save(quiz);
 
         return quizMapper.toResponse(savedQuiz);
+    }
+    
+    @Override
+    public SubmitQuizResponse submitQuiz(
+            Long attemptId,
+            String studentEmail) {
+
+        return null;
     }
 }
