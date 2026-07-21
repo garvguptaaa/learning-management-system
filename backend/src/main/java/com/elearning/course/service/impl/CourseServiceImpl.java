@@ -118,12 +118,66 @@ public class CourseServiceImpl implements CourseService {
     
     @Override
     public CourseResponse publishCourse(Long courseId, String email) {
-        return null;
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        Course course;
+
+        boolean isAdmin = user.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName() == RoleType.ADMIN);
+
+        if (isAdmin) {
+            course = courseRepository.findById(courseId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Course not found"));
+        } else {
+            course = courseRepository.findByIdAndInstructorEmail(courseId, email)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException(
+                                    "Course not found or you are not the owner"));
+        }
+
+        course.setPublished(true);
+        course.setStatus(CourseStatus.PUBLISHED);
+
+        Course updatedCourse = courseRepository.save(course);
+
+        return courseMapper.toResponse(updatedCourse);
     }
 
     @Override
     public CourseResponse unpublishCourse(Long courseId, String email) {
-        return null;
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        Course course;
+
+        boolean isAdmin = user.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName() == RoleType.ADMIN);
+
+        if (isAdmin) {
+            course = courseRepository.findById(courseId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Course not found"));
+        } else {
+            course = courseRepository.findByIdAndInstructorEmail(courseId, email)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException(
+                                    "Course not found or you are not the owner"));
+        }
+
+        course.setPublished(false);
+        course.setStatus(CourseStatus.DRAFT);
+
+        Course updatedCourse = courseRepository.save(course);
+
+        return courseMapper.toResponse(updatedCourse);
     }
 
 }

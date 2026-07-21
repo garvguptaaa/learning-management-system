@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.elearning.course.dto.request.UpdateCourseRequest;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -70,5 +71,29 @@ public class CourseController {
                 request);
 
         return ResponseEntity.ok(response);
+    }
+    
+    @PatchMapping("/{id}/publish")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
+    public ResponseEntity<CourseResponse> publishCourse(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                courseService.publishCourse(
+                        id,
+                        authentication.getName()));
+    }
+    
+    @PatchMapping("/{id}/unpublish")
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
+    public ResponseEntity<CourseResponse> unpublishCourse(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                courseService.unpublishCourse(
+                        id,
+                        authentication.getName()));
     }
 }
