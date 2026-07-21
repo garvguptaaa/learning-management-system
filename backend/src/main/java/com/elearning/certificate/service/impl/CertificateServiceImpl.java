@@ -1,5 +1,8 @@
 package com.elearning.certificate.service.impl;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,6 +10,7 @@ import com.elearning.certificate.dto.response.GenerateCertificateResponse;
 import com.elearning.certificate.entity.Certificate;
 import com.elearning.certificate.repository.CertificateRepository;
 import com.elearning.certificate.service.CertificateService;
+import com.elearning.certificate.service.PdfCertificateService;
 import com.elearning.common.exception.BadRequestException;
 import com.elearning.common.exception.ResourceNotFoundException;
 import com.elearning.course.entity.Course;
@@ -34,6 +38,7 @@ public class CertificateServiceImpl implements CertificateService {
 	private final EnrollmentRepository enrollmentRepository;
 	private final LessonRepository lessonRepository;
 	private final LessonProgressRepository lessonProgressRepository;
+	private final PdfCertificateService pdfCertificateService;
 
 	@Override
 	@Transactional
@@ -102,5 +107,39 @@ public class CertificateServiceImpl implements CertificateService {
 	                    .toString()
 	                    .substring(0, 8)
 	                    .toUpperCase();
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadCertificate(
+	        Long certificateId,
+	        String studentEmail) {
+
+	    User student = userRepository.findByEmail(studentEmail)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Student not found"));
+
+	    Certificate certificate =
+	            certificateRepository.findById(certificateId)
+	                    .orElseThrow(() ->
+	                            new ResourceNotFoundException(
+	                                    "Certificate not found"));
+
+	    if (!certificate.getStudent().getId()
+	            .equals(student.getId())) {
+
+	        throw new BadRequestException(
+	                "Access denied");
+	    }
+
+	    byte[] pdf =
+	            pdfCertificateService
+	                    .generateCertificatePdf(certificate);
+
+	    return ResponseEntity.ok()
+	            .header(HttpHeaders.CONTENT_DISPOSITION,
+	                    "attachment; filename=certificate.pdf")
+	            .contentType(MediaType.APPLICATION_PDF)
+	            .body(pdf);
 	}
 }

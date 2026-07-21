@@ -3,6 +3,7 @@ package com.elearning.certificate.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,16 @@ public class CertificateController {
                 certificateService.generateCertificate(
                         courseId,
                         authentication.getName()));
+    }
+    
+    @GetMapping("/download/{certificateId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<byte[]> downloadCertificate(
+            @PathVariable Long certificateId,
+            Authentication authentication) {
+
+        return certificateService.downloadCertificate(
+                certificateId,
+                authentication.getName());
     }
 }

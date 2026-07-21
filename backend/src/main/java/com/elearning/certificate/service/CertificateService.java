@@ -1,5 +1,7 @@
 package com.elearning.certificate.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.elearning.certificate.dto.response.GenerateCertificateResponse;
 
 public interface CertificateService {
@@ -8,4 +10,7 @@ public interface CertificateService {
             Long courseId,
             String studentEmail);
 
+    ResponseEntity<byte[]> downloadCertificate(
+            Long certificateId,
+            String studentEmail);
 }
