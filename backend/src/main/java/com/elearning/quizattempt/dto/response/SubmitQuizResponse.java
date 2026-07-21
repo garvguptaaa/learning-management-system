@@ -19,7 +19,7 @@ public class SubmitQuizResponse {
 
     private Integer wrongAnswers;
 
-    private Double score;
+    private Integer score;
 
     private Double percentage;
 

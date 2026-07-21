@@ -20,6 +20,7 @@ public interface OptionRepository
     
     boolean existsByQuestionAndOptionOrder(Question question,
             Integer optionOrder);
+    Optional<Option> findByQuestionAndCorrectTrue(Question question);
 
 boolean existsByQuestionAndOptionTextIgnoreCase(
 Question question,
