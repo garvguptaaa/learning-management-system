@@ -1,6 +1,7 @@
 package com.elearning.enrollment.controller;
 
 import com.elearning.enrollment.dto.response.EnrollmentResponse;
+import com.elearning.enrollment.dto.response.MyCourseResponse;
 import com.elearning.enrollment.service.EnrollmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/courses/{courseId}/enrollments")
@@ -30,5 +32,15 @@ public class EnrollmentController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
+    }
+    
+    @GetMapping("/my-courses")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<MyCourseResponse>> getMyCourses(
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                enrollmentService.getMyCourses(
+                        authentication.getName()));
     }
 }

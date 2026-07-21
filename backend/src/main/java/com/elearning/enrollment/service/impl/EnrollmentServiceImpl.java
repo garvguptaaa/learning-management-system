@@ -3,6 +3,7 @@ package com.elearning.enrollment.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.elearning.enrollment.dto.response.EnrollmentResponse;
+import com.elearning.enrollment.dto.response.MyCourseResponse;
 import com.elearning.enrollment.mapper.EnrollmentMapper;
 import com.elearning.enrollment.repository.EnrollmentRepository;
 import com.elearning.enrollment.service.EnrollmentService;
@@ -10,6 +11,7 @@ import com.elearning.course.repository.CourseRepository;
 import com.elearning.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.elearning.common.enums.EnrollmentStatus;
 import com.elearning.common.enums.RoleType;
@@ -17,6 +19,11 @@ import com.elearning.common.exception.BadRequestException;
 import com.elearning.common.exception.ResourceNotFoundException;
 import com.elearning.course.entity.Course;
 import com.elearning.enrollment.entity.Enrollment;
+import com.elearning.user.entity.User;
+
+import java.util.stream.Collectors;
+
+import com.elearning.enrollment.dto.response.MyCourseResponse;
 import com.elearning.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
@@ -69,5 +76,20 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 enrollmentRepository.save(enrollment);
 
         return enrollmentMapper.toResponse(savedEnrollment);
+    }
+    
+    @Override
+    public List<MyCourseResponse> getMyCourses(String studentEmail) {
+
+        User student = userRepository.findByEmail(studentEmail)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Student not found"));
+
+        List<Enrollment> enrollments =
+                enrollmentRepository.findByStudent(student);
+
+        return enrollments.stream()
+                .map(enrollmentMapper::toMyCourseResponse)
+                .collect(Collectors.toList());
     }
 }

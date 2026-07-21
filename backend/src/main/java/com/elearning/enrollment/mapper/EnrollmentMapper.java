@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.elearning.enrollment.dto.response.EnrollmentResponse;
+import com.elearning.enrollment.dto.response.MyCourseResponse;
 import com.elearning.enrollment.entity.Enrollment;
 
 @Mapper(componentModel = "spring")
@@ -16,4 +17,15 @@ public interface EnrollmentMapper {
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
     EnrollmentResponse toResponse(Enrollment enrollment);
+    
+    
+    @Mapping(target = "enrollmentId", source = "id")
+    @Mapping(target = "courseId", source = "course.id")
+    @Mapping(target = "courseTitle", source = "course.title")
+    @Mapping(
+        target = "instructorName",
+        expression = "java(enrollment.getCourse().getInstructor().getFirstName() + \" \" + enrollment.getCourse().getInstructor().getLastName())"
+    )
+    @Mapping(target = "status", expression = "java(enrollment.getStatus().name())")
+    MyCourseResponse toMyCourseResponse(Enrollment enrollment);
 }
