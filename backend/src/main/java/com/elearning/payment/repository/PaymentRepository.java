@@ -24,4 +24,6 @@ public interface PaymentRepository
             Course course,
             PaymentStatus status
     );
+    
+    
 }
