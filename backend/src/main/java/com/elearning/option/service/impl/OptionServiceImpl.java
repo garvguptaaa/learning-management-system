@@ -9,7 +9,7 @@ import com.elearning.option.repository.OptionRepository;
 import com.elearning.option.service.OptionService;
 import com.elearning.question.repository.QuestionRepository;
 import com.elearning.user.repository.UserRepository;
-
+import com.elearning.common.enums.QuestionType;
 import com.elearning.common.enums.RoleType;
 import com.elearning.common.exception.BadRequestException;
 import com.elearning.common.exception.ResourceNotFoundException;
@@ -76,6 +76,21 @@ public class OptionServiceImpl implements OptionService {
         Option option = optionMapper.toEntity(request);
 
         option.setQuestion(question);
+        
+        if (question.getQuestionType() == QuestionType.MCQ &&
+        	    optionRepository.countByQuestion(question) >= 4) {
+
+        	    throw new BadRequestException(
+        	            "MCQ cannot have more than 4 options");
+        	}
+        
+        if (question.getQuestionType() == QuestionType.MCQ &&
+        	    request.getCorrect() &&
+        	    optionRepository.countByQuestionAndCorrectTrue(question) >= 1) {
+
+        	    throw new BadRequestException(
+        	            "MCQ can have only one correct option");
+        	}
 
         Option savedOption = optionRepository.save(option);
 

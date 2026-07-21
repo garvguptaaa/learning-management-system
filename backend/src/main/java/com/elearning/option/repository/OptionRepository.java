@@ -21,4 +21,6 @@ boolean existsByQuestionAndOptionTextIgnoreCase(
 Question question,
 String optionText);
 
+long countByQuestion(Question question);
+
 }
