@@ -12,5 +12,9 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Optional<Quiz> findByLesson(Lesson lesson);
     
     boolean existsByLesson(Lesson lesson);
+    
+    Optional<Quiz> findByIdAndLessonModuleCourseInstructorEmail(
+            Long id,
+            String email);
 
 }

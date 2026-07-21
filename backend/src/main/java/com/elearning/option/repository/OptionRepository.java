@@ -13,5 +13,12 @@ public interface OptionRepository
     List<Option> findByQuestionOrderByOptionOrderAsc(Question question);
 
     long countByQuestionAndCorrectTrue(Question question);
+    
+    boolean existsByQuestionAndOptionOrder(Question question,
+            Integer optionOrder);
+
+boolean existsByQuestionAndOptionTextIgnoreCase(
+Question question,
+String optionText);
 
 }
