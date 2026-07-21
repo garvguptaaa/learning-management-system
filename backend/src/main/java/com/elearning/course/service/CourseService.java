@@ -18,4 +18,8 @@ public interface CourseService {
     CourseResponse updateCourse(Long courseId,
             String email,
             UpdateCourseRequest request);
+    
+    CourseResponse publishCourse(Long courseId, String email);
+
+    CourseResponse unpublishCourse(Long courseId, String email);
 }

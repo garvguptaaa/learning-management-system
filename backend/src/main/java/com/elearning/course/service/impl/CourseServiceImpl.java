@@ -115,5 +115,15 @@ public class CourseServiceImpl implements CourseService {
 
         return courseMapper.toResponse(updatedCourse);
     }
+    
+    @Override
+    public CourseResponse publishCourse(Long courseId, String email) {
+        return null;
+    }
+
+    @Override
+    public CourseResponse unpublishCourse(Long courseId, String email) {
+        return null;
+    }
 
 }
