@@ -4,6 +4,7 @@ package com.elearning.auth.service.impl;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,13 @@ import com.elearning.auth.service.AuthService;
 import com.elearning.common.enums.RoleType;
 import com.elearning.common.exception.InvalidCredentialsException;
 import com.elearning.common.exception.ResourceAlreadyExistsException;
+import com.elearning.common.security.jwt.JwtService;
 import com.elearning.role.entity.Role;
 import com.elearning.role.repository.RoleRepository;
 import com.elearning.user.entity.User;
 import com.elearning.user.repository.UserRepository;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
 
+    private final AuthenticationManager authenticationManager;
+    
+    private final JwtService jwtService;
     @Override
     public RegisterResponse register(RegisterRequest request) {
 
@@ -67,36 +74,33 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
-        // Find user by email
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()));
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
-                        new InvalidCredentialsException("Invalid email or password"));
+                        new RuntimeException("Invalid credentials"));
 
-        // Verify password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid email or password");
-        }
+        String jwtToken =
+                jwtService.generateToken(
+                        new com.elearning.common.security.model.CustomUserDetails(user));
 
-        // Build response
-        LoginResponse response = new LoginResponse();
-
-        response.setId(user.getId());
-
-        response.setFullName(
-                user.getFirstName() + " " + user.getLastName());
-
-        response.setEmail(user.getEmail());
-
-        response.setRoles(
-                user.getRoles()
-                        .stream()
-                        .map(role -> role.getName().name())
-                        .collect(Collectors.toSet())
-        );
-
-        response.setMessage("Login Successful");
-
-        return response;
+        return LoginResponse.builder()
+                .success(true)
+                .message("Login successful")
+                .token(jwtToken)
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .roles(
+                        user.getRoles()
+                                .stream()
+                                .map(role -> role.getName().name())
+                                .collect(Collectors.toSet()))
+                .build();
     }
 
 }
