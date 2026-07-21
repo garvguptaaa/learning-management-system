@@ -3,12 +3,14 @@ package com.elearning.progress.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.elearning.progress.dto.response.MarkLessonCompleteResponse;
+import com.elearning.progress.dto.response.ProgressSummaryResponse;
 import com.elearning.progress.service.ProgressService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,18 @@ public class ProgressController {
         return ResponseEntity.ok(
                 progressService.markLessonComplete(
                         lessonId,
+                        authentication.getName()));
+    }
+    
+    @GetMapping("/courses/{courseId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<ProgressSummaryResponse> getCourseProgress(
+            @PathVariable Long courseId,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                progressService.getCourseProgress(
+                        courseId,
                         authentication.getName()));
     }
 }

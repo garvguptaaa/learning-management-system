@@ -17,5 +17,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                                                             String email);
     
     List<Lesson> findByModuleCourse(Course course);
+    
+    long countByModuleCourse(Course course);
 
 }

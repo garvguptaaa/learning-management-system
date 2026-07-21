@@ -25,4 +25,6 @@ public interface LessonProgressRepository
     Long countByStudentAndLessonModuleCourseAndCompletedTrue(
             User student,
             Course course);
+    
+    
 }
