@@ -9,6 +9,16 @@ import com.elearning.enrollment.service.EnrollmentService;
 import com.elearning.course.repository.CourseRepository;
 import com.elearning.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
+
+import com.elearning.common.enums.EnrollmentStatus;
+import com.elearning.common.enums.RoleType;
+import com.elearning.common.exception.BadRequestException;
+import com.elearning.common.exception.ResourceNotFoundException;
+import com.elearning.course.entity.Course;
+import com.elearning.enrollment.entity.Enrollment;
+import com.elearning.user.entity.User;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,6 +34,40 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public EnrollmentResponse enroll(Long courseId,
                                      String studentEmail) {
 
-        return null;
+        User student = userRepository.findByEmail(studentEmail)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Student not found"));
+
+        boolean isStudent = student.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName() == RoleType.STUDENT);
+
+        if (!isStudent) {
+            throw new BadRequestException(
+                    "Only students can enroll in courses");
+        }
+
+        Course course = courseRepository.findByIdAndPublishedTrue(courseId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course not found"));
+                        
+        if (enrollmentRepository.existsByStudentAndCourse(student, course)) {
+            throw new BadRequestException(
+                    "You are already enrolled in this course");
+        }
+
+        Enrollment enrollment = Enrollment.builder()
+                .student(student)
+                .course(course)
+                .status(EnrollmentStatus.ACTIVE)
+                .progressPercentage(0.0)
+                .certificateGenerated(false)
+                .enrolledAt(LocalDateTime.now())
+                .build();
+
+        Enrollment savedEnrollment =
+                enrollmentRepository.save(enrollment);
+
+        return enrollmentMapper.toResponse(savedEnrollment);
     }
 }
